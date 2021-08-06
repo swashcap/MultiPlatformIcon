@@ -4,6 +4,7 @@
   "devDependencies": {
     "@svgr/cli": "^5.5.0",
     "@types/react": "^17.0.16",
+    "@types/react-native": "^0.64.12",
     "globby": "^12.0.0",
     "npm-run-all": "^4.1.5",
     "sharp": "^0.28.3",
@@ -12,15 +13,15 @@
   "keywords": [
     "icons",
     "react",
-    "reactnative"
+    "react-native"
   ],
   "license": "MIT",
   "name": "multiplatformicon",
   "private": true,
   "scripts": {
-    "build": "run-p build:* && tsc",
-    "build:react": "svgr -d react --typescript src",
-    "build:reactnative": "echo 'to do'",
+    "build": "run-p build:*",
+    "build:react": "svgr -d react --typescript src && tsc -b tsconfig.react.json",
+    "build:react-native": "node scripts/build-react-native.mjs && tsc -b tsconfig.react-native.json",
     "clean": "rm -rf react react-native"
   },
   "version": "0.0.0"
