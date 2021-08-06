@@ -1,0 +1,25 @@
+{
+  "name": "multiplatformicon-demos-react",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "build-storybook": "build-storybook",
+    "storybook": "start-storybook -p 6006"
+  },
+  "keywords": [
+    "icon",
+    "react"
+  ],
+  "author": "Cory Reed",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@storybook/addon-actions": "^6.3.6",
+    "@storybook/addon-essentials": "^6.3.6",
+    "@storybook/addon-links": "^6.3.6",
+    "@storybook/react": "^6.3.6",
+    "babel-loader": "^8.2.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
