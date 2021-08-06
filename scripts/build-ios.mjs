@@ -1,4 +1,4 @@
-import camelCase from "camelcase";
+import lodash from "lodash";
 import path from "path";
 import puppeteer from "puppeteer";
 import { fileURLToPath } from "url";
@@ -51,7 +51,7 @@ import UIKit
 
 public enum MultiPlatformIcon: CaseIterable {
 ${svgs
-  .map((filename) => `  case ${camelCase(path.parse(filename).name)}`)
+  .map((filename) => `  case ${lodash.camelCase(path.parse(filename).name)}`)
   .join("\n")}
 
   public var resourceString: String {
@@ -60,7 +60,7 @@ ${svgs
   .map((filename) => {
     const { name } = path.parse(filename);
 
-    return `    case ${camelCase(name)}: return "${name}"`
+    return `    case ${lodash.camelCase(name)}: return "${name}"`
   })
   .join("\n")}
     }
