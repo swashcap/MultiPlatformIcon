@@ -1,8 +1,10 @@
 import path from "path";
 import sharp from "sharp";
+import { exec } from "child_process";
 import { fileURLToPath } from "url";
 import { globby } from "globby";
 import { promises as fs } from "fs";
+import { promisify } from "util";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,7 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
     await fs.mkdir(path.join(__dirname, "../react-native"), { recursive: true });
 
     await fs.writeFile(
-      path.join(__dirname, `../react-native/index.tsx`),
+      path.join(__dirname, `../react-native/index.js`),
       svgs
         .map((filename) => `export * from "./${path.parse(filename).name}";`)
         .join("\n")
@@ -25,9 +27,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
       return Promise.all([
         fs.writeFile(
-          path.join(__dirname, `../react-native/${name}.tsx`),
+          path.join(__dirname, `../react-native/${name}.js`),
           `import * as React from "react";
-import { Image, ImageProps, StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   icon: {
@@ -37,17 +39,16 @@ const styles = StyleSheet.create({
   }
 });
 
-export type ${name}Props = ImageProps;
-
-export const ${name}: React.FunctionComponent<${name}Props> = (props) => {
+export const ${name} = (props) => {
   const { style, ...rest } = props;
 
-  return (
-    <Image
-      style={[styles.icon, style]}
-      {...rest}
-      source={require("${name}.png")}
-    />
+  return React.createElement(
+    Image,
+    {
+      style: [styles.icon, style],
+      ...rest,
+      source: require("./${name}.png"),
+    }
   );
 }`
         ),
@@ -59,6 +60,35 @@ export const ${name}: React.FunctionComponent<${name}Props> = (props) => {
           .toFile(path.join(__dirname, `../react-native/${name}@3x.png`)),
       ]);
     }));
+
+    /**
+     * react-native can't handle `import`s from outside the project root.
+     * This build script copies the build artifacts into node_modules as a
+     * workaround.
+     *
+     * @see {@link https://github.com/react-native-community/cli/issues/639}
+     * @see {@link https://github.com/facebook/metro/issues/391}
+     */
+    await fs.mkdir(
+      path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon"),
+      { recursive: true }
+    );
+
+    await Promise.all([
+      fs.writeFile(
+        path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon/package.json"),
+        JSON.stringify({
+          main: "index.js",
+          name: "multiplatformicon",
+          version: "0.0.0",
+        })
+      ),
+      promisify(exec)(
+        `cp ${path.join(__dirname, "../react-native/")}* ${
+          path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon/")
+        }`
+      ),
+    ]);
   } catch (error) {
     console.error(error);
     process.exit(1);

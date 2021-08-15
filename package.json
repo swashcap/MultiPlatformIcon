@@ -26,7 +26,7 @@
     "build:android": "node scripts/build-android.mjs",
     "build:ios": "node scripts/build-ios.mjs",
     "build:react": "svgr -d react --typescript src && tsc -b tsconfig.react.json",
-    "build:react-native": "node scripts/build-react-native.mjs && tsc -b tsconfig.react-native.json",
+    "build:react-native": "node scripts/build-react-native.mjs",
     "clean": "rm -rf android/src/main/res/drawable ios react react-native"
   },
   "version": "0.0.0"
