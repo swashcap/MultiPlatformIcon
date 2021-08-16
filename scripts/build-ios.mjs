@@ -6,8 +6,7 @@ import { globby } from "globby";
 import { promises as fs } from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ASSETS_DIRNAME = path.join(__dirname, "../ios/Sources/MultiPlatformIcon.xcassets");
-const CLASSES_DIRNAME = path.join(__dirname, "../ios/Classes");
+const ASSETS_DIRNAME = path.join(__dirname, "../ios/Sources/MultiPlatformIcon/Resources/MultiPlatformIcon.xcassets");
 
 /**
  * Build an asset catalog.
@@ -30,7 +29,6 @@ const CLASSES_DIRNAME = path.join(__dirname, "../ios/Classes");
         ],
       }),
       fs.mkdir(ASSETS_DIRNAME, { recursive: true }),
-      fs.mkdir(CLASSES_DIRNAME, { recursive: true }),
     ]);
 
     await Promise.all([
@@ -44,12 +42,28 @@ const CLASSES_DIRNAME = path.join(__dirname, "../ios/Classes");
         })
       ),
       fs.writeFile(
-        path.join(CLASSES_DIRNAME, "MultiPlatformIcon.swift"),
+        path.join(__dirname, "../ios/Package.swift"),
+        `// swift-tools-version:5.0
+// This file is generated!
+import PackageDescription
+
+let package = Package(
+  name: "MultiPlatformIcon",
+  platforms: [.iOS(.v12)],
+  products: [
+    .library(name: "MultiPlatformIcon", targets: ["MultiPlatformIcon"])
+  ],
+  targets: [
+    .target(name: "MultiPlatformIcon")
+  ]
+)
+`
+      ),
+      fs.writeFile(
+        path.join(__dirname, "../ios/Sources/MultiPlatformIcon/MultiPlatformIconAsset.swift"),
         `// This file is generated!
 
-import UIKit
-
-public enum MultiPlatformIcon: CaseIterable {
+public enum MultiPlatformIconAsset: CaseIterable {
 ${svgs
   .map((filename) => `  case ${lodash.camelCase(path.parse(filename).name)}`)
   .join("\n")}
@@ -60,7 +74,7 @@ ${svgs
   .map((filename) => {
     const { name } = path.parse(filename);
 
-    return `    case ${lodash.camelCase(name)}: return "${name}"`
+    return `    case .${lodash.camelCase(name)}: return "${name}"`
   })
   .join("\n")}
     }
@@ -68,14 +82,25 @@ ${svgs
 }`
       ),
       fs.writeFile(
-        path.join(CLASSES_DIRNAME, "UIImage+MultiPlatformIcon.swift"),
+        path.join(__dirname, "../ios/Sources/MultiPlatformIcon/UIImage+MultiPlatformIcon.swift"),
         `// This file is generated!
 
+import Foundation
 import UIKit
 
+// Get the current bundle:
+// https://forums.swift.org/t/unable-to-find-bundle-in-package-target-tests-when-package-depends-on-another-package-containing-resources-accessed-via-bundle-module/43974/5
+private class CurrentBundleFinder {}
+
 public extension UIImage {
-  convenience init(multiPlatformIcon: MultiPlatformIcon) {
-    self.init(named: multiPlatformIcon.resourceString)
+    static let iconBundle = Bundle(for: CurrentBundleFinder.self)
+
+    convenience init(icon multiPlatformIconAsset: MultiPlatformIconAsset) {
+      self.init(
+        named: multiPlatformIconAsset.resourceString,
+        in: UIImage.iconBundle,
+        compatibleWith: nil
+      )!
   }
 }`
       ),
@@ -106,7 +131,7 @@ public extension UIImage {
           path.join(dirname, "Contents.json"),
           JSON.stringify({
             images: [{
-              filename: path.join(dirname, `${name}.pdf`),
+              filename: `${name}.pdf`,
               idiom: "universal",
             }],
             info: {
