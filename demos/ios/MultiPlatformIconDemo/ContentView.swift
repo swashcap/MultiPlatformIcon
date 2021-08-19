@@ -18,6 +18,7 @@ struct ContentView: View {
                 ForEach(MultiPlatformIconAsset.allCases, id: \.self) { value in
                     VStack(alignment: .center, spacing: 4) {
                         Image(uiImage: UIImage(icon: value))
+                            .renderingMode(.original)
                             .resizable()
                             .frame(width: 24, height: 24, alignment: .center)
                         Text(String(describing: value))
