@@ -29,7 +29,7 @@ const ASSETS_DIRNAME = path.join(__dirname, "../android/src/main/res/drawable");
       );
 
       return fs.writeFile(
-        path.join(ASSETS_DIRNAME, `${lodash.snakeCase(name)}.xml`),
+        path.join(ASSETS_DIRNAME, `ic_${lodash.snakeCase(name)}.xml`),
         vectorDrawable
       );
     }));
