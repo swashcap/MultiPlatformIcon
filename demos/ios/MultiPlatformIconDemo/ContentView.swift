@@ -13,8 +13,18 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("MultiPlatformIconDemo")
-            Image(uiImage: UIImage(icon: .arrowBottom))
-                .frame(width: 24, height: 24, alignment: .center)
+                .padding(.bottom, 8)
+            HStack(alignment: .top, spacing: 16) {
+                ForEach(MultiPlatformIconAsset.allCases, id: \.self) { value in
+                    VStack(alignment: .center, spacing: 4) {
+                        Image(uiImage: UIImage(icon: value))
+                            .resizable()
+                            .frame(width: 24, height: 24, alignment: .center)
+                        Text(String(describing: value))
+                            .font(.caption)
+                    }
+                }
+            }
         }
     }
 }

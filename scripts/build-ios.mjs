@@ -63,9 +63,9 @@ let package = Package(
         path.join(__dirname, "../ios/Sources/MultiPlatformIcon/MultiPlatformIconAsset.swift"),
         `// This file is generated!
 
-public enum MultiPlatformIconAsset: CaseIterable {
+public enum MultiPlatformIconAsset: Int, CaseIterable {
 ${svgs
-  .map((filename) => `  case ${lodash.camelCase(path.parse(filename).name)}`)
+  .map((filename, index) => `  case ${lodash.camelCase(path.parse(filename).name)}${index === 0 ? ` = 0` : ""}`)
   .join("\n")}
 
   public var resourceString: String {
@@ -92,7 +92,8 @@ public extension UIImage {
     convenience init(icon multiPlatformIconAsset: MultiPlatformIconAsset) {
       self.init(
         named: multiPlatformIconAsset.resourceString,
-        in: Bundle.module
+        in: Bundle.module,
+        compatibleWith: nil
       )!
   }
 }`

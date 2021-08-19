@@ -1,7 +1,7 @@
 // This file is generated!
 
-public enum MultiPlatformIconAsset: CaseIterable {
-  case arrowBottom
+public enum MultiPlatformIconAsset: Int, CaseIterable {
+  case arrowBottom = 0
   case arrowLeft
   case arrowRight
   case arrowTop
