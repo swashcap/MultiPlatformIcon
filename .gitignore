@@ -121,3 +121,4 @@ dist
 
 # Swift Packages
 .swiftpm
+xcuserdata
