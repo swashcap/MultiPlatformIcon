@@ -21,7 +21,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowTop,
-} from 'multiplatformicon';
+} from 'multiplatformicon-react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   icon: {
-    padding: 8
+    padding: 8,
   }
 });
 

@@ -1,1 +1,13 @@
-{"images":[{"filename":"ArrowRight.pdf","idiom":"universal"}],"info":{"author":"com.swashcap","version":1},"properties":{"template-rendering-intent":"template"}}
+{
+  "images": [{
+    "filename": "ArrowRight.pdf",
+    "idiom": "universal"
+  }],
+  "info": {
+    "author": "com.swashcap",
+    "version": 1
+  },
+  "properties": {
+    "template-rendering-intent": "template"
+  }
+}

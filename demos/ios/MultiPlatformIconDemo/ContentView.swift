@@ -20,6 +20,7 @@ struct ContentView: View {
                         Image(uiImage: UIImage(icon: value))
                             .renderingMode(.original)
                             .resizable()
+                            .aspectRatio(contentMode: .fit)
                             .frame(width: 24, height: 24, alignment: .center)
                         Text(String(describing: value))
                             .font(.caption)

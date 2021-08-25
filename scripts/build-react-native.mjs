@@ -1,3 +1,4 @@
+import Handlebars from "handlebars";
 import path from "path";
 import sharp from "sharp";
 import { exec } from "child_process";
@@ -10,16 +11,43 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 ;(async () => {
   try {
-    const svgs = await globby(path.join(__dirname, "../src/*.svg"));
+    const [
+      svgs,
+      iconTypeScriptTemplateContent,
+      iconTemplateContent,
+      indexTemplateContent,
+      stylesTemplateContent,
+    ] = await Promise.all([
+      globby(path.join(__dirname, "../src/*.svg")),
+      fs.readFile(path.join(__dirname, "templates/react-native/Icon.d.ts.hbs"), "utf-8"),
+      fs.readFile(path.join(__dirname, "templates/react-native/Icon.js.hbs"), "utf-8"),
+      fs.readFile(path.join(__dirname, "templates/react-native/index.js.hbs"), "utf-8"),
+      fs.readFile(path.join(__dirname, "templates/react-native/styles.js.hbs"), "utf-8"),
+      fs.mkdir(path.join(__dirname, "../react-native/src"), { recursive: true }),
+    ]);
 
-    await fs.mkdir(path.join(__dirname, "../react-native"), { recursive: true });
+    const currentDate = new Date().toISOString();
+    const iconTemplate = Handlebars.compile(iconTemplateContent, { noEscape: true });
+    const iconTypescriptTemplate = Handlebars.compile(iconTypeScriptTemplateContent, { noEscape: true });
+    const indexTemplate = Handlebars.compile(indexTemplateContent, { noEscape: true });
+    const stylesTemplate = Handlebars.compile(stylesTemplateContent, { noEscape: true });
 
-    await fs.writeFile(
-      path.join(__dirname, `../react-native/index.js`),
-      svgs
-        .map((filename) => `export * from "./${path.parse(filename).name}";`)
-        .join("\n")
-    );
+    await Promise.all([
+      fs.writeFile(
+        path.join(__dirname, `../react-native/src/index.js`),
+        indexTemplate({
+          currentDate,
+          filenames: svgs.map((filename) => path.parse(filename).name),
+        })
+      ),
+      fs.writeFile(
+        path.join(__dirname, "../react-native/src/styles.js"),
+        stylesTemplate({
+          currentDate,
+          size: 24,
+        })
+      ),
+    ]);
 
     await Promise.all(svgs.map(async (filename) => {
       const stream = sharp(filename);
@@ -27,37 +55,26 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
       return Promise.all([
         fs.writeFile(
-          path.join(__dirname, `../react-native/${name}.js`),
-          `import * as React from "react";
-import { Image, StyleSheet } from "react-native";
-
-const styles = StyleSheet.create({
-  icon: {
-    height: 24,
-    resizeMode: "contain",
-    width: 24,
-  }
-});
-
-export const ${name} = (props) => {
-  const { style, ...rest } = props;
-
-  return React.createElement(
-    Image,
-    {
-      style: [styles.icon, style],
-      ...rest,
-      source: require("./${name}.png"),
-    }
-  );
-}`
+          path.join(__dirname, `../react-native/src/${name}.js`),
+          iconTemplate({
+            assetName: `${name}.png`,
+            componentName: name,
+            currentDate,
+          }),
+        ),
+        fs.writeFile(
+          path.join(__dirname, `../react-native/src/${name}.d.ts`),
+          iconTypescriptTemplate({
+            componentName: name,
+            currentDate
+          })
         ),
         stream.resize({ height: 24, width: 24 })
-          .toFile(path.join(__dirname, `../react-native/${name}.png`)),
+          .toFile(path.join(__dirname, `../react-native/src/${name}.png`)),
         stream.resize({ height: 48, width: 48 })
-          .toFile(path.join(__dirname, `../react-native/${name}@2x.png`)),
+          .toFile(path.join(__dirname, `../react-native/src/${name}@2x.png`)),
         stream.resize({ height: 72, width: 72 })
-          .toFile(path.join(__dirname, `../react-native/${name}@3x.png`)),
+          .toFile(path.join(__dirname, `../react-native/src/${name}@3x.png`)),
       ]);
     }));
 
@@ -70,22 +87,14 @@ export const ${name} = (props) => {
      * @see {@link https://github.com/facebook/metro/issues/391}
      */
     await fs.mkdir(
-      path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon"),
+      path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon-react-native"),
       { recursive: true }
     );
 
     await Promise.all([
-      fs.writeFile(
-        path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon/package.json"),
-        JSON.stringify({
-          main: "index.js",
-          name: "multiplatformicon",
-          version: "0.0.0",
-        })
-      ),
       promisify(exec)(
-        `cp ${path.join(__dirname, "../react-native/")}* ${
-          path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon/")
+        `cp -r ${path.join(__dirname, "../react-native/")}* ${
+          path.join(__dirname, "../demos/react-native/node_modules/multiplatformicon-react-native/")
         }`
       ),
     ]);

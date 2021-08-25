@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DO NOT EDIT!
+
+  This file was generated from build tooling.
+
+  Created at: 2021-08-25T06:43:51.038Z
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
@@ -7,3 +15,4 @@
         android:fillColor="#000"
         android:pathData="M6 13h13l1-1l-1-1H6l5-5V4H9l-6 7v2l6 7h2v-2l-5-5z"/>
 </vector>
+

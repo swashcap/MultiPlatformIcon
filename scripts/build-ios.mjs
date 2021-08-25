@@ -1,3 +1,4 @@
+import Handlebars from "handlebars";
 import lodash from "lodash";
 import path from "path";
 import puppeteer from "puppeteer";
@@ -15,11 +16,19 @@ const ASSETS_DIRNAME = path.join(__dirname, "../ios/Sources/MultiPlatformIcon/Re
  */
 ;(async () => {
   try {
+    Handlebars.registerHelper("toCamelCase", lodash.camelCase);
+
     const [
       svgs,
+      assetCatalogTemplateContent,
+      imageSetTemplateContent,
+      enumTemplateContent,
       browser
     ] = await Promise.all([
       globby(path.join(__dirname, "../src/*.svg")),
+      fs.readFile(path.join(__dirname, "templates/ios/AssetCatalogContents.json.hbs"), "utf-8"),
+      fs.readFile(path.join(__dirname, "templates/ios/ImageSetContents.json.hbs"), "utf-8"),
+      fs.readFile(path.join(__dirname, "templates/ios/MultiPlatformIconAsset.swift.hbs"), "utf-8"),
       puppeteer.launch({
         args: [
           "--disable-dev-shm-usage",
@@ -31,72 +40,21 @@ const ASSETS_DIRNAME = path.join(__dirname, "../ios/Sources/MultiPlatformIcon/Re
       fs.mkdir(ASSETS_DIRNAME, { recursive: true }),
     ]);
 
+    const assetCatalogTemplate = Handlebars.compile(assetCatalogTemplateContent, { noEscape: true });
+    const imageSetTemplate= Handlebars.compile(imageSetTemplateContent, { noEscape: true });
+    const enumTemplate = Handlebars.compile(enumTemplateContent, { noEscape: true });
+
     await Promise.all([
       fs.writeFile(
         path.join(ASSETS_DIRNAME, "Contents.json"),
-        JSON.stringify({
-          info: {
-            author: "com.swashcap",
-            version: 1,
-          }
-        })
-      ),
-      fs.writeFile(
-        path.join(__dirname, "../ios/Package.swift"),
-        `// swift-tools-version:5.3
-// This file is generated!
-import PackageDescription
-
-let package = Package(
-  name: "MultiPlatformIcon",
-  platforms: [.iOS(.v12)],
-  products: [
-    .library(name: "MultiPlatformIcon", targets: ["MultiPlatformIcon"])
-  ],
-  targets: [
-    .target(name: "MultiPlatformIcon")
-  ]
-)
-`
+        assetCatalogTemplate({ author: "com.swashcap" }),
       ),
       fs.writeFile(
         path.join(__dirname, "../ios/Sources/MultiPlatformIcon/MultiPlatformIconAsset.swift"),
-        `// This file is generated!
-
-public enum MultiPlatformIconAsset: Int, CaseIterable {
-${svgs
-  .map((filename, index) => `  case ${lodash.camelCase(path.parse(filename).name)}${index === 0 ? ` = 0` : ""}`)
-  .join("\n")}
-
-  public var resourceString: String {
-    switch self {
-${svgs
-  .map((filename) => {
-    const { name } = path.parse(filename);
-
-    return `    case .${lodash.camelCase(name)}: return "${name}"`
-  })
-  .join("\n")}
-    }
-  }
-}`
-      ),
-      fs.writeFile(
-        path.join(__dirname, "../ios/Sources/MultiPlatformIcon/UIImage+MultiPlatformIcon.swift"),
-        `// This file is generated!
-
-import Foundation
-import UIKit
-
-public extension UIImage {
-    convenience init(icon multiPlatformIconAsset: MultiPlatformIconAsset) {
-      self.init(
-        named: multiPlatformIconAsset.resourceString,
-        in: Bundle.module,
-        compatibleWith: nil
-      )!
-  }
-}`
+        enumTemplate({
+          currentDate: new Date().toISOString(),
+          icons: svgs.map((filename) => path.parse(filename).name),
+        })
       ),
     ]);
 
@@ -123,18 +81,9 @@ public extension UIImage {
       return Promise.all([
         fs.writeFile(
           path.join(dirname, "Contents.json"),
-          JSON.stringify({
-            images: [{
-              filename: `${name}.pdf`,
-              idiom: "universal",
-            }],
-            info: {
-              author: "com.swashcap",
-              version: 1,
-            },
-            properties: {
-              "template-rendering-intent": "template",
-            },
+          imageSetTemplate({
+            author: "com.swashcap",
+            filename: `${name}.pdf`,
           })
         ),
         writePDF(filename, path.join(dirname, `${name}.pdf`)),
