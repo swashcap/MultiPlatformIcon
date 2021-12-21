@@ -3,7 +3,7 @@
   "description": "An experiment with icons for multiple platforms.",
   "devDependencies": {
     "@svgr/cli": "^6.1.2",
-    "@types/react": "^17.0.16",
+    "@types/react": "^17.0.37",
     "@types/react-native": "^0.64.12",
     "del": "^6.0.0",
     "globby": "^12.0.1",
