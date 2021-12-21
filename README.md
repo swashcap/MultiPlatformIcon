@@ -12,7 +12,7 @@ _An experiment with icons for multiple platforms._
 
 ## Setup
 
-1. Ensure [Node.js](https://nodejs.org/en/) v16.6.x is installed
+1. Ensure [Node.js](https://nodejs.org/en/) v16.13.x is installed
 2. Install the dependencies with [npm](https://yarnpkg.com/en/):
     ```shell
     npm install
