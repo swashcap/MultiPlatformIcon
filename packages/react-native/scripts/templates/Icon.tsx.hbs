@@ -1,0 +1,25 @@
+/**
+ * DO NOT EDIT!
+ *
+ * This file was generated from build tooling.
+ *
+ * Created at: {{currentDate}}
+ */
+
+import * as React from "react";
+import { Image, ImageProps } from "react-native";
+
+import { styles } from "./styles";
+
+export type {{componentName}}Prop = ImageProps;
+
+export const {{componentName}}: React.FunctionComponent<{{componentName}}Prop> = ({
+  style,
+  ...rest
+}) => (
+  <Image
+    style={[styles.icon, style]}
+    {...rest}
+    source={require("{{assetName}}")}
+  />
+);

@@ -122,3 +122,6 @@ dist
 # Swift Packages
 .swiftpm
 xcuserdata
+
+# Turbo files
+.turbo

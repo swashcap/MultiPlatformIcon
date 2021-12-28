@@ -2,7 +2,7 @@
 //
 // This file was generated from build tooling.
 //
-// Created at: 2021-08-25T05:55:53.123Z
+// Created at: 2021-12-21T08:13:27.106Z
 
 public enum MultiPlatformIconAsset: Int, CaseIterable {
     case arrowBottom = 0

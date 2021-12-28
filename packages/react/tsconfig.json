@@ -1,0 +1,4 @@
+{
+  "extends": "multiplatformicon-tsconfig/tsconfig.react.json",
+  "include": ["dist"]
+}

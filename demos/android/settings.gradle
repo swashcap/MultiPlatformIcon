@@ -1,5 +1,0 @@
-rootProject.name = 'MultiPlatformIconDemo'
-include ':app'
-
-include 'multiplatformicon'
-project(':multiplatformicon').projectDir = file('../../android')

@@ -1,0 +1,8 @@
+*.hbs
+*.pdf
+*.png
+*.svg
+Pods
+build
+dist
+pnpm-lock.yaml

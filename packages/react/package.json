@@ -1,0 +1,27 @@
+{
+  "author": "Cory Reed",
+  "description": "An experiment with icons for multiple platforms.",
+  "devDependencies": {
+    "@svgr/cli": "^6.1.2",
+    "@types/react": "^17.0.37",
+    "multiplatformicon-svg": "^0.0.0",
+    "multiplatformicon-tsconfig": "^0.0.0",
+    "typescript": "^4.5.4"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "multiplatformicon-react",
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "private": true,
+  "scripts": {
+    "build": "svgr ../svg/dist && tsc -b tsconfig.json && rm dist/*.tsx",
+    "clean": "rm -rf dist"
+  },
+  "version": "0.0.0"
+}

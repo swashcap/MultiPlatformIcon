@@ -1,0 +1,18 @@
+// DO NOT EDIT!
+//
+// This file was generated from build tooling.
+// Created at: {{currentDate}}
+
+public enum MultiPlatformIconAsset: Int, CaseIterable {
+{{#each icons}}
+  case {{toCamelCase this}}{{#unless @index}} = 0{{/unless}}
+{{/each}}
+
+  public var resourceString: String {
+    switch self {
+{{#each icons}}
+    case .{{toCamelCase this}}: return "{{this}}"
+{{/each}}
+    }
+  }
+}

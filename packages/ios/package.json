@@ -1,0 +1,22 @@
+{
+  "author": "Cory Reed",
+  "description": "An experiment with icons for multiple platforms.",
+  "devDependencies": {
+    "globby": "^12.0.2",
+    "handlebars": "^4.7.7",
+    "lodash": "^4.17.21",
+    "multiplatformicon-svg": "^0.0.0",
+    "puppeteer": "^13.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "name": "multiplatformicon-ios",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "clean": "rm -rf dist"
+  },
+  "version": "0.0.0"
+}

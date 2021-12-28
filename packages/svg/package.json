@@ -1,0 +1,18 @@
+{
+  "author": "Cory Reed",
+  "description": "An experiment with icons for multiple platforms.",
+  "devDependencies": {
+    "svgo": "^2.8.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "name": "multiplatformicon-svg",
+  "private": true,
+  "scripts": {
+    "build": "svgo -i ./src -o ./dist",
+    "clean": "rm -rf dist"
+  },
+  "version": "0.0.0"
+}

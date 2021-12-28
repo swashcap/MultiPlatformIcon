@@ -1,0 +1,29 @@
+{
+  "author": "Cory Reed",
+  "description": "An experiment with icons for multiple platforms.",
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.5.1",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "multiplatformicon-react-native": "^0.0.0",
+    "react": "17.0.2",
+    "react-native": "0.66.4",
+    "react-test-renderer": "17.0.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "name": "multiplatformicon-react-native-demo",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest"
+  },
+  "version": "0.0.0"
+}

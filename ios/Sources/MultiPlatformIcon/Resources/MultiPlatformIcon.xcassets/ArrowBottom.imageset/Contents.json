@@ -1,8 +1,10 @@
 {
-  "images": [{
-    "filename": "ArrowBottom.pdf",
-    "idiom": "universal"
-  }],
+  "images": [
+    {
+      "filename": "ArrowBottom.pdf",
+      "idiom": "universal"
+    }
+  ],
   "info": {
     "author": "com.swashcap",
     "version": 1

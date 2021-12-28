@@ -1,0 +1,4 @@
+{
+  "extends": "multiplatformicon-tsconfig/tsconfig.reactnative.json",
+  "include": ["dist"]
+}

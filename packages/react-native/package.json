@@ -1,0 +1,29 @@
+{
+  "author": "Cory Reed",
+  "description": "An experiment with icons for multiple platforms.",
+  "devDependencies": {
+    "@types/react": "^17.0.37",
+    "@types/react-native": "^0.66.9",
+    "globby": "^12.0.2",
+    "handlebars": "^4.7.7",
+    "lodash": "^4.17.21",
+    "multiplatformicon-png": "^0.0.0",
+    "multiplatformicon-tsconfig": "^0.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "multiplatformicon-react-native",
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-native": "^0.66.0"
+  },
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc -b tsconfig.json && rm dist/*.tsx",
+    "clean": "rm -rf dist"
+  },
+  "version": "0.0.0"
+}

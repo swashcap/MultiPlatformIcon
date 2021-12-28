@@ -1,0 +1,27 @@
+{
+  "author": "Cory Reed",
+  "description": "An experiment with icons for multiple platforms.",
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@storybook/addon-actions": "^6.4.9",
+    "@storybook/addon-essentials": "^6.4.9",
+    "@storybook/addon-links": "^6.4.9",
+    "@storybook/react": "^6.4.9",
+    "babel-loader": "^8.2.2",
+    "multiplatformicon-png": "^0.0.0",
+    "multiplatformicon-react": "^0.0.0",
+    "multiplatformicon-svg": "^0.0.0",
+    "normalize.css": "^8.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "license": "MIT",
+  "name": "multiplatformicon-react-demo",
+  "private": true,
+  "scripts": {
+    "build": "build-storybook -o dist",
+    "clean": "rm -rf dist",
+    "start": "start-storybook -p 6006"
+  },
+  "version": "0.0.0"
+}
